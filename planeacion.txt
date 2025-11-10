@@ -1,0 +1,104 @@
+STUDIO GHIBLI API 
+Consulta datos y estadísticos acerca 
+de las películas y personajes de
+Studio Ghibli
+MENÚ PRINCIPAL 
+1. Consultas web
+    MENÚ - CONSULTAS WEB
+    (recomendación: usar try, para mostrar msje en caso de conexión inválida con api)
+    (recordar también mostrar msje en caso de no encontrar lo que ingresó el usuario)
+    1. Consultar películas
+        Ingresa el nombre de la película que
+        deseas consultar (Sugerencias: Castle in the Sky, 
+        Grave of the Fireflies): 
+        * aquí muestra todos los datos formateados sobre
+        esa película * 
+        * se almacenan en el archivo de consultas_peli.txt*
+    2. Consultar personajes
+        Ingresa el nombre del personaje que deseas
+        consultar (Sugerencias: Chihiro Ogino, Ursula)
+        * aquí muestra todos los datos formateados sobre
+        el personaje * 
+        * se almacenan en el archivo de consultas_person.txt*
+    3. Mostrar consultas de películas
+        * muestra las consultas almacenadas en el archivo
+        consultas_peli.txt *
+        * si no hay, indica que no hay consultas para mostrar *
+    4. Mostrar consultas de personajes
+        * muestra las consultas almacenadas en el archivo
+        consultas_person.txt *
+        * si no hay, indica que no hay consultas para mostrar *
+    5. Mostrar todas las consultas
+        * muestra todas las consultas de ambos archivos*
+        * si no hay, indica que no hay consultas para mostrar *
+    6. Regresar al menú principal
+2. Consultas de registros
+    MENÚ - CONSULTAS DE REGISTROS
+    1. Consultar películas
+        MENÚ - CONSULTAS DE PELÍCULAS
+        (recomendacion: usar try, para mostrar mensaje en caso de no encontrar coincidencias)
+        1. Buscar por nombre
+            Ingrese el nombre de la película (Sugerencia: Porco Rosso): 
+        2. Buscar por director
+            Ingrese el nombre del director (Sugerencia: Isao Takahata): 
+        3. Buscar por año 
+            Ingrese el año de estreno (Sugerencia: 2002):
+        4. Buscar por rango de duración (minutos)
+            Ingrese el rango mínimo (Sugerencia: 90):
+            Ingrese el rango máximo (Sugerencia: 120): 
+            * Muestra las películas con una duración entre 90-120 min*
+        4. Buscar por calificación mínima
+            Ingrese la calificación mínima (Sugerencia: 90):
+            *Muestra las películas con calificación mayor o igual a 90*
+        5. Regresar al menú de consultas
+    2. Consultar personajes
+        MENÚ - CONSULTAS DE PERSONAJES
+        (recomendacion: uso de try)
+        1. Buscar personaje por nombre
+            Ingrese el nombre del personaje: 
+            * muestra todos los datos principales del personaje * 
+        2. Buscar personajes por género 
+            Ingrese el género (H/M): 
+            * Muestra los personajes encontrados de acuerdo
+            al género *
+        3. Buscar personajes por color de ojos
+            Colores de ojos disponibles:
+            - Brown
+            - Blue 
+            - Green 
+            - Grey
+            - Black
+            Ingrese color: 
+            * se muestran los personajes con ojos de ese color *
+        4. Buscar personajes por color de cabello
+            Colores de cabello disponibles:
+            - Brown
+            - Black
+            - Grey
+            - White
+            - Blonde
+            Ingrese color: 
+            * se muestran los personajes con cabello de ese color*
+        5. Regresar al menú de consultas  
+    3. Regresar el menú principal
+3. Estadísticas
+    MENÚ - ESTADÍSTICAS
+    1. Promedios generales (duración y calificación)
+    2. Top 5 películas mejor calificadas
+    3. Porcentaje de personajes por género
+    4. Características físicas más comunes
+    5. Colores de cabello más comunes
+    6. Regresar al menú principal
+4. Gráficas
+    MENÚ - GRÁFICAS
+    1. Películas por director 
+        * muestra gráfica de barras con 
+        cantidad de películas por director*
+    2. Personajes por género
+        * gráfica de pastel con los porcentajes
+        de personajes femeninos y masculinos*
+    3. Evolución de calificaciones
+        * gráfica de línea con las calificaciones
+        de cada película * 
+    4. Regresar al menú principal 
+5. Borrar todo
