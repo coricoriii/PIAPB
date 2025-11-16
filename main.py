@@ -1,3 +1,4 @@
+from modulo_estadisticas import estadisticas
 import Módulos.api_ghibli as ghibli
 import json
 
@@ -148,26 +149,6 @@ def consultas_personajes(opcion, personajes):
         pass
     else:
         print('Opción inválida. Intente de nuevo')
-
-def estadisticas(opcion, peliculas, personajes):
-    # Promedios generales (duración y calificación)
-    if opcion == '1':
-        pass
-    # Top 5 películas mejor calificadas
-    elif opcion == '2':
-        pass
-    # Porcentaje de personajes por género
-    elif opcion == '3':
-        pass
-    # Características físicas más comunes
-    elif opcion == '4':
-        pass
-    # Colores de cabello más comunes
-    elif opcion == '5':
-        pass
-    else:
-        print("Opción inválida, intente de nuevo.")
-    
 
 def graficas(opcion, peliculas, personajes):
     # Películas por director
