@@ -1,3 +1,4 @@
+from Módulos.modulo_estadisticas import estadisticas
 import Módulos.api_ghibli as ghibli
 import time
 from Módulos.json_Graficas import ejecutar, eliminar_archivos
@@ -241,10 +242,6 @@ def graficas(opcion):
         plt.tight_layout()
         print('cierre la grafica/pantalla emergente para poder continuar')
         plt.show()
-
-    else:
-        print("Opción inválida en el menú de gráficas.")
-        time.sleep(1)
  
 def main():
     # Inicializando
