@@ -1,4 +1,4 @@
-from modulo_estadisticas import estadisticas
+from Módulos.modulo_estadisticas import estadisticas
 import Módulos.api_ghibli as ghibli
 import json
 
