@@ -1,3 +1,10 @@
+"""
+Módulo para manejo de datos de películas y personajes.
+Contiene funciones para imprimir información en formato legible,
+agregar registros de consultas a archivos de texto y mostrar dichos registros.
+
+"""
+
 # Funcion que recibe un diccionario de pelicula y lo imprime con formato legible
 def imprimir_pelicula(pelicula):
     print(f"Título: {pelicula['title']}")

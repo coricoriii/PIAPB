@@ -1,6 +1,10 @@
 import requests
 import json
+"""
+Módulo para interactuar con la API de Studio Ghibli.
+Contiene la clase GhibliAPI con métodos para consultar películas y personajes.
 
+"""
 class GhibliAPI:
     def __init__(self):
         self.url = "https://ghibliapi.vercel.app"
