@@ -1,60 +1,68 @@
 from .api_ghibli import GhibliAPI
 import json
-import pandas as pd
+import openpyxl
 import os
 
-#lista con datos que se conservaran
+# Campos que guardaremos
 CAMPOS = ['rt_score', 'title', 'director', 'release_date', 'running_time']
 
-#depuracion de datos e implementacion numerica 
-def depurar(peliculas):
-    peliculas_depuradas = []
+def depurar(lista_peliculas):
+    #Quita datos que no usamos y convierte números.
+    peliculas_limpias = []
 
-    for p in (peliculas or []):
-        nueva_pelicula = {}
-        #depuracion de datos innecesarios
-        for campo in CAMPOS:
-            nueva_pelicula[campo] = p.get(campo, None)
-        #convertor a valores numericos 
-        for k in ('rt_score', 'release_date', 'running_time'):
+    for peli in (lista_peliculas or []):
+        nueva = {campo: peli.get(campo, None) for campo in CAMPOS}
+
+        # Convertir valores numéricos
+        for campo in ('rt_score', 'release_date', 'running_time'):
             try:
-                if nueva_pelicula[k] is not None:
-                    nueva_pelicula[k] = int(nueva_pelicula[k])
-            except (ValueError, TypeError, KeyError):
-                nueva_pelicula[k] = None
+                if nueva[campo] is not None:
+                    nueva[campo] = int(nueva[campo])
+            except:
+                nueva[campo] = None
 
-        peliculas_depuradas.append(nueva_pelicula)
+        peliculas_limpias.append(nueva)
 
-    return peliculas_depuradas
+    return peliculas_limpias
 
-def guardar_datos(peliculas):
-    #guarda datos del json
-    with open("ghibli_depurado.json", "w", encoding="utf-8") as f:
-        json.dump(peliculas, f, indent=4, ensure_ascii=False)
-    #guarda los archivos con pandas
-    df = pd.DataFrame(peliculas)
-    df.to_csv("ghibli.csv", index=False, encoding="utf-8-sig")
 
-#consulta API, depura los datos y genera los archivos
+def guardar_datos(peliculas_limpias):
+    # Guardar JSON
+    with open("ghibli_depurado.json", "w", encoding="utf-8") as archivo_json:
+        json.dump(peliculas_limpias, archivo_json, indent=4, ensure_ascii=False)
+
+    # Guardar Excel
+    libro = openpyxl.Workbook()
+    hoja = libro.active
+    hoja.title = "Películas"
+
+    hoja.append(CAMPOS)
+
+    for peli in peliculas_limpias:
+        fila = [peli.get(campo, None) for campo in CAMPOS]
+        hoja.append(fila)
+
+    libro.save("ghibli.xlsx")
+
+
 def ejecutar():
+    #Consulta API, depura y guarda.
     api = GhibliAPI()
-    peliculas = api.lista_peliculas()
+    peliculas_api = api.lista_peliculas()
 
-    if peliculas:
-        depuradas = depurar(peliculas)
-        guardar_datos(depuradas)
+    if peliculas_api:
+        peliculas_limpias = depurar(peliculas_api)
+        guardar_datos(peliculas_limpias)
     else:
-        print("Error: no se pudieron obtener las películas")
+        print("No se pudieron obtener las películas")
 
-#funcion para elimnar especificamente los archivos creados en este modulo
+
 def eliminar_archivos():
-    for archivo in ['ghibli_depurado.json', 'ghibli.csv']:
+    #Borra los archivos generados, solo de este modulo. 
+    for archivo in ["ghibli_depurado.json", "ghibli.xlsx"]:
         if os.path.exists(archivo):
             os.remove(archivo)
 
+
 if __name__ == "__main__":
     ejecutar()
-
-
-
-

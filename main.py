@@ -174,75 +174,70 @@ def estadisticas(opcion, peliculas, personajes):
         print("Opción inválida, intente de nuevo.")
     
 def graficas(opcion):
-    # Intentar leer el CSV 
+    # Leer Excel
     try:
-        df = pd.read_csv("ghibli.csv", encoding="utf-8-sig")
+        datos = pd.read_excel("ghibli.xlsx", engine="openpyxl")
     except FileNotFoundError:
-        print("No se encontró 'ghibli.csv'. Primero genera los datos desde el menú de Gráficas.")
+        print("No existe 'ghibli.xlsx'. Primero genere los datos.")
         time.sleep(2)
         return
 
-    # Convertir columnas numéricas
+    # Convertir números
     for col in ["rt_score", "release_date", "running_time"]:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
+        if col in datos.columns:
+            datos[col] = pd.to_numeric(datos[col], errors="coerce")
 
-    # 1) Duración por película (barras)
+    # 1) Duraciones (barras)
     if opcion == 1:
-        df_dur = df.dropna(subset=["running_time", "title"])
-        df_dur = df_dur.sort_values("running_time", ascending=False)
+        datos_dur = datos.dropna(subset=["running_time", "title"])
+        datos_dur = datos_dur.sort_values("running_time", ascending=False)
 
         plt.figure(figsize=(12, 6))
-        plt.bar(df_dur["title"], df_dur["running_time"], color="skyblue")
-        plt.title("Duración de películas (minutos)")
+        plt.bar(datos_dur["title"], datos_dur["running_time"], color="skyblue")
+        plt.title("Duración de películas")
         plt.xlabel("Película")
-        plt.ylabel("Duración (min)")
+        plt.ylabel("Minutos")
         plt.xticks(rotation=75, ha="right", fontsize=8)
         plt.grid(True, axis="y", alpha=0.5)
         plt.tight_layout()
-        print('cierre la grafica/pantalla emergente para poder continuar')
+        print('CERRAR VENTANA EMERGENTE/GRAFICA PARA CONTINUAR.')
         plt.show()
-        
 
-    # 2) Películas por director (grafica pie)
+    # 2) Películas por director (pie)
     elif opcion == 2:
-        conteo = (
-            df.groupby("director")["title"]
-              .count()
-              .reset_index(name="num_peliculas")
-        )
+        conteo = datos.groupby("director")["title"].count().reset_index(name="cantidad")
 
         plt.figure(figsize=(8, 8))
         plt.pie(
-            conteo["num_peliculas"],
+            conteo["cantidad"],
             labels=conteo["director"],
             autopct="%1.1f%%",
             startangle=90
         )
-        plt.title("Distribución de películas por director")
+        plt.title("Películas por director")
         plt.tight_layout()
-        print('cierre la grafica/pantalla emergente para poder continuar')
+        print('CERRAR VENTANA EMERGENTE/GRAFICA PARA CONTINUAR.')
         plt.show()
 
-    # 3) Evolución de calificaciones (grafica lineal)
+    # 3) Evolución de calificaciones
     elif opcion == 3:
-        df_year = df.dropna(subset=["release_date", "rt_score"])
-        df_year = (
-            df_year.groupby("release_date", as_index=False)["rt_score"]
-                   .mean()
-                   .sort_values("release_date")
-        )
+        datos_anio = datos.dropna(subset=["release_date", "rt_score"])
+        datos_anio = datos_anio.groupby("release_date", as_index=False)["rt_score"].mean()
 
         plt.figure(figsize=(10, 6))
-        plt.plot(df_year["release_date"], df_year["rt_score"], marker="o")
-        plt.title("Evolución de calificaciones (promedio por año)")
-        plt.xlabel("Año de lanzamiento")
-        plt.ylabel("Puntuación promedio (rt_score)")
+        plt.plot(datos_anio["release_date"], datos_anio["rt_score"], marker="o")
+        plt.title("Calificaciones por año")
+        plt.xlabel("Año")
+        plt.ylabel("Score promedio")
         plt.grid(True)
         plt.tight_layout()
-        print('cierre la grafica/pantalla emergente para poder continuar')
+        print('CERRAR VENTANA EMERGENTE/GRAFICA PARA CONTINUAR.')
         plt.show()
- 
+
+    else:
+        print("Opción inválida.")
+        time.sleep(1)
+
 def main():
     # Inicializando
     api = ghibli.GhibliAPI()
@@ -330,7 +325,7 @@ def main():
                 #llama a la funcion gracias
                 graficas(subop)
                 #Volver al menu de graficas
-                input('\n Volver al menu de graficas, precione cualquier tecla.')
+                input('\nVolver al menu de graficas, precione cualquier tecla.')
         elif op == '5':
             eliminar_archivos()
             print('eliminando archivos...')
