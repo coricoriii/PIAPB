@@ -73,6 +73,7 @@ def formatear_pelicula(pelicula, personajes):
             })
     return pelicula_formateada
 
+# Funcion que recibe la lista de diccionarios de personajes y la devuelve formateada
 def formatear_personajes(personajes, peliculas):
     personajes_formateados = []
     for personaje in personajes:
@@ -101,6 +102,7 @@ def formatear_personajes(personajes, peliculas):
         personajes_formateados.append(personaje_formateado)
     return personajes_formateados
 
+# Funcion que recibe un solo personaje y lo devuelve con la lista de peliculas formateada
 def formatear_personaje(personaje, peliculas):
     personaje_formateado = {
         "id": personaje["id"],
@@ -126,6 +128,7 @@ def formatear_personaje(personaje, peliculas):
             })
     return personaje_formateado
 
+# Funcion que maneja las consultas web desde el menú principal
 def consultas_web(opcion, api):
     if opcion == '1':
         nom = input("Ingrese el nombre de la película a consultar\n(Sugerencias: Castle in the Sky, Grave of the Fireflies): ")
@@ -194,7 +197,8 @@ def consultas_web(opcion, api):
 
 def consultas_registros(opcion, peliculas, personajes):
     if opcion == '1':
-        while True: 
+        while True:
+            print("="*50) 
             print("""MENU - CONSULTAS DE PELÍCULAS
             1. Buscar por nombre
             2. Buscar por director
@@ -202,6 +206,7 @@ def consultas_registros(opcion, peliculas, personajes):
             4. Buscar por rango de duración
             5. Buscar por calificación mínima
             6. Regresar al menú de consultas de registros""")
+            print("="*50)
             subop = input("Seleccione una opción: ")
             if subop == '6':
                 break
@@ -209,6 +214,7 @@ def consultas_registros(opcion, peliculas, personajes):
                 consultas_peliculas(subop, peliculas)
     elif opcion == '2':
         while True:
+            print("="*50)
             print("""MENU - CONSULTAS DE PERSONAJES
         1. Buscar por nombre
         2. Buscar por género
@@ -227,30 +233,38 @@ def consultas_peliculas(opcion, peliculas):
     while True:
         # Buscar por nombre
         if opcion == '1':
-            nom = input("Ingrese el nombre de la película a buscar: ")
-            encontrados = [p for p in peliculas if p['title'].lower() == nom.lower()]
-            if encontrados:
-                for pelicula in encontrados:
-                    md.imprimir_pelicula(pelicula)
-            else:
-                print("No se encontró ninguna película con ese nombre.")
+            while True:
+                nom = input("Ingrese el nombre de la película a buscar (Sugerencias: My Neighbor Totoro): ")
+                encontrados = [p for p in peliculas if p['title'].lower() == nom.lower()]
+                if encontrados:
+                    for pelicula in encontrados:
+                        md.imprimir_pelicula(pelicula)
+                else:
+                    print("No se encontró ninguna película con ese nombre.")
+                resp = input("¿Desea buscar otra película por nombre? (s para sí, cualquier otro caracter para regresar): ")
+                if resp.lower() != 's':
+                    break
         # Buscar por director
         elif opcion == '2':
-            director = input("Ingrese el nombre del director a buscar: ")
-            encontrados = [p for p in peliculas if p['director'].lower() == director.lower()]
-            if encontrados:
-                print(f"| PELÍCULAS ENCONTRADAS DEL DIRECTOR {director.upper()} |")
-                for pelicula in encontrados:
-                    md.imprimir_pelicula(pelicula)
-            else:
-                print("No se encontró ninguna película de ese director.")
+            while True:
+                director = input("Ingrese el nombre del director a buscar (Sugerencias: Hayao Miyazaki): ")
+                encontrados = [p for p in peliculas if p['director'].lower() == director.lower()]
+                if encontrados:
+                    print(f"| PELÍCULAS ENCONTRADAS DEL DIRECTOR {director.upper()} |")
+                    for pelicula in encontrados:
+                        md.imprimir_pelicula(pelicula)
+                else:
+                    print("No se encontró ninguna película de ese director.")
+                resp = input("¿Desea buscar otro director? (s para sí, cualquier otro caracter para regresar): ")
+                if resp.lower() != 's':
+                    break
         # Buscar por año de lanzamiento
         elif opcion == '3':
             while True:
                 try:
-                    fecha = int(input("Ingrese el año de lanzamiento a buscar: "))
+                    fecha = int(input("Ingrese el año de lanzamiento a buscar (Sugerencias: 1988, 1991): "))
                     break
-                except TypeError:
+                except ValueError:
                     print("Entrada inválida, ingrese un valor numérico.")
             f_encontradas = [p for p in peliculas if int(p['release_date']) == fecha]
             if f_encontradas:
@@ -261,10 +275,36 @@ def consultas_peliculas(opcion, peliculas):
                 print("No se encontró ninguna película de ese año.")
         # Buscar por rango de duración
         elif opcion == '4':
-            pass
+            while True:
+                try:
+                    min_duracion = int(input("Ingrese la duración mínima (en minutos): "))
+                    max_duracion = int(input("Ingrese la duración máxima (en minutos): "))
+                    break
+                except ValueError:
+                    print("Entrada inválida, ingrese valores numéricos.")
+            d_encontradas = [p for p in peliculas if min_duracion <= int(p['running_time']) <= max_duracion]
+            if d_encontradas:
+                print(f"| PELÍCULAS CON DURACIÓN ENTRE {min_duracion} Y {max_duracion} MINUTOS |")
+                for pelicula in d_encontradas:
+                    md.imprimir_pelicula(pelicula)
+            else:
+                print("No se encontró ninguna película en ese rango de duración.")
         # Buscar por calificación mínima
         elif opcion == '5':
-            pass
+            while True:
+                try:
+                    calificacion = int(input("Ingrese la calificación mínima (entre 0 y 100): "))
+                    if 0 <= calificacion <= 100:
+                        break
+                except ValueError:
+                    print("Entrada inválida, ingrese un valor numérico entre 0 y 100.")
+            c_encontradas = [p for p in peliculas if int(p['rt_score']) >= calificacion]
+            if c_encontradas:
+                print(f"| PELÍCULAS CON CALIFICACIÓN MAYOR O IGUAL A {calificacion} |")
+                for pelicula in c_encontradas:
+                    md.imprimir_pelicula(pelicula)
+            else:
+                print("No se encontró ninguna película con esa calificación mínima.")
         else: 
             print('Opción inválida. Intente de nuevo')
         respuesta = input("¿Desea hacer otra consulta de películas? (s para sí, cualquier otra tecla para regresar): ")
@@ -274,16 +314,113 @@ def consultas_peliculas(opcion, peliculas):
 def consultas_personajes(opcion, personajes):
     # Buscar por nombre
     if opcion == '1':
-        pass
+        while True:
+            nom = input("Ingrese el nombre del personaje a buscar (Sugerencias: Totoro, Ashitaka): ")
+            encontrados = [p for p in personajes if p['name'].lower() == nom.lower()]
+            if encontrados:
+                for personaje in encontrados:
+                    md.imprimir_personaje(personaje)
+            else:
+                print("No se encontró ningún personaje con ese nombre.")
+            resp = input("¿Desea buscar otro personaje? (s para sí, cualquier otro caracter para regresar): ")
+            if resp.lower() != 's':
+                break
     # Buscar por género
     elif opcion == '2':
-        pass
+        while True:
+            genero = input("Ingrese el género a buscar (H - hombre, M - mujer, N - no especificado): ").upper()
+            if genero == "H":
+                print("| PERSONAJES DE GÉNERO MASCULINO |")
+                for personaje in personajes:
+                    if personaje['gender'].lower() == 'male':
+                        md.imprimir_personaje(personaje)
+            elif genero == "M":
+                print("| PERSONAJES DE GÉNERO FEMENINO |")
+                for personaje in personajes:
+                    if personaje['gender'].lower() == 'female':
+                        md.imprimir_personaje(personaje)
+            elif genero == "N":
+                print("| PERSONAJES DE GÉNERO NO ESPECIFICADO |")
+                for personaje in personajes:
+                    if personaje['gender'].lower() == "na":
+                        md.imprimir_personaje(personaje)
+            else:
+                print("Género inválido. Intente de nuevo.")
+            resp = input("¿Desea buscar otro género? (s para sí, cualquier otro caracter para regresar): ")
+            if resp.lower() != 's':
+                break
     # Buscar por color de ojos
     elif opcion == '3':
-        pass
+        while True:
+            print("""MENU - COLORES DE OJOS
+            1. Café
+            2. Azul
+            3. Negro
+            4. Rojo
+            5. Verde
+            6. Amarillo
+            7. Blanco""")
+            try: 
+                color = int(input("Ingrese el número correspondiente al color de ojos a buscar: "))
+            except ValueError:
+                print("Entrada inválida. Por favor ingrese un número.")
+                return
+            color_dicc = {
+                '1': 'Brown',
+                '2': 'Blue',
+                '3': 'Black',
+                '4': 'Red',
+                '5': 'Green',
+                '6': 'Yellow',
+                '7': 'White'
+            }
+            if str(color) in color_dicc:
+                print(f"| PERSONAJES CON OJOS DE COLOR {color_dicc[str(color)].upper()} |")
+                for personaje in personajes:
+                    if personaje['eye_color'].lower() == color_dicc[str(color)].lower():
+                        md.imprimir_personaje(personaje)
+            else:
+                print("Color inválido. Intente de nuevo.")
+            resp = input("¿Desea buscar otro color de ojos? (s para sí, cualquier otro caracter para regresar): ")
+            if resp.lower() != 's':
+                break
     # Buscar por color de cabello
     elif opcion == '4':
-        pass
+        while True:
+            print("""MENU - COLORES DE CABELLO
+            1. Café
+            2. Negro
+            3. Rubio
+            4. Azul
+            5. Verde
+            6. Rojo
+            7. Blanco
+            8. Gris""")
+            try:
+                color = int(input("Ingrese el número correspondiente al color de cabello a buscar: "))
+            except ValueError:
+                print("Entrada inválida. Por favor ingrese un número.")
+                return
+            color_dicc = {
+                '1': 'Brown',
+                '2': 'Black',
+                '3': 'Blonde',
+                '4': 'Blue',
+                '5': 'Green',
+                '6': 'Red',
+                '7': 'White',
+                '8': 'Grey'
+            }
+            if str(color) in color_dicc:
+                print(f"| PERSONAJES CON CABELLO DE COLOR {color_dicc[str(color)].upper()} |")
+                for personaje in personajes:
+                    if personaje['hair_color'].lower() == color_dicc[str(color)].lower():
+                        md.imprimir_personaje(personaje)
+            else:
+                print("Color inválido. Intente de nuevo.")
+            resp = input("¿Desea buscar otro color de cabello? (s para sí, cualquier otro caracter para regresar): ")
+            if resp.lower() != 's':
+                break
     else:
         print('Opción inválida. Intente de nuevo')
     
