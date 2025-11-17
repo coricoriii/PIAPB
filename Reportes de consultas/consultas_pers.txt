@@ -22,3 +22,11 @@ Color de cabello: Grey
 Peliculas:
  - My Neighbor Totoro
 
+Nombre: San
+Genero: Female
+Edad: 17
+Color de ojos: Brown
+Color de cabello: Brown
+Peliculas:
+ - Princess Mononoke
+
