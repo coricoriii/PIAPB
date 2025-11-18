@@ -4,6 +4,7 @@ Contiene funciones para imprimir información en formato legible,
 agregar registros de consultas a archivos de texto y mostrar dichos registros.
 
 """
+import os 
 
 # Funcion que recibe un diccionario de pelicula y lo imprime con formato legible
 def imprimir_pelicula(pelicula):
@@ -75,3 +76,9 @@ def mostrar_registro_personajes():
     except FileNotFoundError:
         print("No hay registros de consultas de personajes.")
 
+# Funcion que elimina los archivos de registros de consultas
+def eliminar_registros():
+    archivos = ["Reportes de consultas/consultas_peli.txt", "Reportes de consultas/consultas_pers.txt"]
+    for archivo in archivos:
+        if os.path.exists(archivo):
+            os.remove(archivo)

@@ -1,3 +1,8 @@
+"""
+Autores: Corina García, Erick García, David Heredia
+Fecha: 17/11/2025
+Descripción: Programa principal que permite al usuario consultar datos de la API de Studio Ghibli
+"""
 from Módulos.modulo_estadisticas import estadisticas
 import Módulos.manejo_datos as md
 import Módulos.api_ghibli as ghibli
@@ -5,7 +10,7 @@ import time
 from Módulos.json_Graficas import ejecutar, eliminar_archivos
 import pandas as pd 
 import matplotlib.pyplot as plt 
-
+import re
 
 # Funcion que recibe la lista de diccionarios de peliculas y la devuelve
 # sin datos innecesarios y con la lista de personajes formateada
@@ -195,6 +200,7 @@ def consultas_web(opcion, api):
     else:
         print("Opción inválida, intente de nuevo.")
 
+# Funcion que maneja las consultas de registros desde el menú principal
 def consultas_registros(opcion, peliculas, personajes):
     if opcion == '1':
         while True:
@@ -262,11 +268,17 @@ def consultas_peliculas(opcion, peliculas):
         elif opcion == '3':
             while True:
                 try:
-                    fecha = int(input("Ingrese el año de lanzamiento a buscar (Sugerencias: 1988, 1991): "))
-                    break
+                    # Usar regex para validar que la entrada es un año de 4 dígitos
+                    exp_anio = re.compile(r'^\d{4}$')
+                    fecha = input("Ingrese el año de lanzamiento a buscar (Sugerencias: 1988, 1991): ")
+                    mo = exp_anio.search(fecha)
+                    if mo:
+                        break
+                    else:
+                        print("Entrada inválida, ingrese un año de 4 dígitos.")
                 except ValueError:
                     print("Entrada inválida, ingrese un valor numérico.")
-            f_encontradas = [p for p in peliculas if int(p['release_date']) == fecha]
+            f_encontradas = [p for p in peliculas if int(p['release_date']) == int(fecha)]
             if f_encontradas:
                 print(f"| PELÍCULAS LANZADAS EN {fecha} |")
                 for pelicula in f_encontradas:
@@ -511,6 +523,7 @@ def main():
             4. Gráficas
             5. Borrar todo y finalizar""")
         op = input("Seleccione una opción: ")
+        # Consultas web
         if op == '1':
             while True:
                 print("""MENU - CONSULTAS WEB
@@ -525,6 +538,7 @@ def main():
                     break
                 else:
                     consultas_web(subop, api)
+        # Consultas de registros
         elif op == '2':
             while True:
                 print("""MENU - CONSULTAS DE REGISTROS
@@ -536,6 +550,7 @@ def main():
                     break
                 else:
                     consultas_registros(subop,peliculas,personajes)
+        # Estadísticas
         elif op == '3':
             while True:
                 print("""MENU - ESTADÍSTICAS
@@ -550,6 +565,7 @@ def main():
                     break
                 else:
                     estadisticas(subop, peliculas, personajes)
+        # Gráficas
         elif op == '4':
             #llama a la funcion de ejecutar de modulo creado 
             ejecutar()
@@ -577,14 +593,18 @@ def main():
                 graficas(subop)
                 #Volver al menu de graficas
                 input('\nVolver al menu de graficas, precione cualquier tecla.')
+        # Eliminar todo y salir
         elif op == '5':
+            # Elimina el archivo xlsx   
             eliminar_archivos()
-            print('eliminando archivos...')
+            # Eliminar archivos de consultas
+            md.eliminar_registros()
+            print('Eliminando archivos...')
             time.sleep(2)
-            print('eliminados, gracias.')
+            print('Eliminados, gracias.')
             # aqui falta el codigo para borrar los registros
             break
         else:
             print("Opción inválida, intente de nuevo.")
-
+# Ejecutar main
 main()
